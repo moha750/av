@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض الأفتار بشكل دائري</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        input {
+            margin: 10px 0;
+        }
+        #avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        #avatar {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 50%; /* جعل الصورة دائرية */
+            display: none; /* إخفاء الصورة حتى يتم تحميلها */
+        }
+        #frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%; /* جعل الإطار دائريًا */
+            pointer-events: none; /* حتى لا يتعارض مع النقر */
+        }
+        #download-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #download-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>عرض الأفتار بشكل دائري</h1>
+    <label for="avatar-upload">اختر صورة الأفتار:</label>
+    <input type="file" id="avatar-upload" accept="image/*">
+    <div id="avatar-container">
+        <img id="avatar" src="" alt="الأفتار">
+        <img id="frame" src="frame.png" alt="الإطار"> <!-- هنا ضع رابط صورة الإطار -->
+    </div>
+    <br>
+    <button id="download-btn" disabled>حفظ الأفتار</button>
+
+    <script>
+        const avatarUpload = document.getElementById('avatar-upload');
+        const avatarImg = document.getElementById('avatar');
+        const frameImg = document.getElementById('frame');
+        const downloadBtn = document.getElementById('download-btn');
+
+        // عند تحميل صورة الأفتار
+        avatarUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarImg.src = e.target.result;
+                    avatarImg.style.display = 'block'; // عرض الصورة بعد تحميلها
+                    downloadBtn.disabled = false; // تفعيل زر الحفظ
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // عند النقر على زر الحفظ
+        downloadBtn.addEventListener('click', function() {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            // تعيين أبعاد الكانفاس إلى 1080x1080 بكسل
+            canvas.width = 1080;
+            canvas.height = 1080;
+
+            // رسم صورة الأفتار على الكانفاس بحجم 1080x1080
+            const avatar = new Image();
+            avatar.src = avatarImg.src;
+            avatar.onload = function() {
+                // رسم الصورة بشكل دائري
+                context.beginPath();
+                context.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, 0, Math.PI * 2);
+                context.closePath();
+                context.clip(); // اقتصاص الصورة بشكل دائري
+
+                // رسم الصورة بحجم 1080x1080 مع الحفاظ على النسبة
+                const scale = Math.min(canvas.width / avatar.width, canvas.height / avatar.height);
+                const width = avatar.width * scale;
+                const height = avatar.height * scale;
+                const x = (canvas.width - width) / 2;
+                const y = (canvas.height - height) / 2;
+                context.drawImage(avatar, x, y, width, height);
+
+                // رسم صورة الإطار بحجم 1080x1080
+                const frame = new Image();
+                frame.src = frameImg.src;
+                frame.onload = function() {
+                    context.drawImage(frame, 0, 0, canvas.width, canvas.height);
+
+                    // تحويل الكانفاس إلى صورة
+                    const dataURL = canvas.toDataURL('image/png');
+
+                    // إنشاء رابط للتحميل
+                    const link = document.createElement('a');
+                    link.href = dataURL;
+                    link.download = 'avatar-with-custom-frame.png'; // اسم الملف
+                    link.click();
+                };
+            };
+        });
+    </script>
+</body>
+</html>
