@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نادي أدِيب</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+    <img src="logo.png" alt="">
+    <h2> ✨🖼️أضف صورتك وكنت جزءًا من الحدث </h2>
+
+    <div id="cropper-container" class="cropper-container">
+        <p> أضغط لتحميل الصورة </p>
+        <input type="file" id="avatar-upload" accept="image/*">
+    </div>
+    <div id="avatar-container">
+        <img id="avatar" src="" alt="الأفتار">
+        <img id="frame" src="frame.png" alt="الإطار"> <!-- هنا ضع رابط صورة الإطار -->
+    </div>
+
+    <div id="share-buttons" style="display: none; margin-top: 20px;">
+        <h3>مشاركة الصورة:</h3>
+        <a id="share-facebook" target="_blank" style="margin: 5px; text-decoration: none; color: #1877f2;">Facebook</a>
+        <a id="share-twitter" target="_blank" style="margin: 5px; text-decoration: none; color: #1da1f2;">Twitter</a>
+        <a id="share-whatsapp" target="_blank" style="margin: 5px; text-decoration: none; color: #25d366;">WhatsApp</a>
+    </div>
+
+    <button id="download-btn" disabled>حفظ الأفتار</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
